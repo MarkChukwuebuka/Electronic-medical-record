@@ -35,16 +35,16 @@ gender = (
 )
 
 class Encounter(models.Model):
-    patient = models.ForeignKey(MedUser, on_delete=models.CASCADE)
-    worker = models.ForeignKey(MedUser, on_delete=models.CASCADE)
+    patient = models.ForeignKey(MedUser, on_delete=models.CASCADE, related_name='record_encounter')
+    worker = models.ForeignKey(MedUser, on_delete=models.CASCADE, related_name='records')
     date = models.DateField()
     time = models.TimeField()
     visit = models.CharField(max_length=30, choices=visit)
-    weight = models.DecimalField()
-    height = models.DecimalField()
-    bp = models.DecimalField()
-    temp = models.DecimalField()
-    rr = models.DecimalField()
+    weight = models.DecimalField(max_digits=4, decimal_places=2)
+    height = models.DecimalField(max_digits=4, decimal_places=2)
+    bp = models.DecimalField(max_digits=4, decimal_places=2)
+    temp = models.DecimalField(max_digits=4, decimal_places=2)
+    rr = models.DecimalField(max_digits=4, decimal_places=2)
     complaints = models.TextField()
     diagnosis = models.CharField(max_length=50, choices=diagnosis)
     treatment_plan = models.TextField()
@@ -55,7 +55,7 @@ class Encounter(models.Model):
 
 # model for health worker
 class Worker(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='worker')
+    worker = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
     name = models.CharField(max_length=20, blank=False)
     surname = models.CharField(max_length=20, blank=False)
     age = models.IntegerField()
@@ -67,12 +67,12 @@ class Worker(models.Model):
 
 # model for patient/record
 class Patient(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='patient')
-    worker = models.ForeignKey(MedUser, on_delete=models.CASCADE)
+    patient = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='patient')
+    worker = models.ForeignKey(MedUser, on_delete=models.CASCADE, related_name='patients')
     age = models.IntegerField()
     gender = models.CharField(max_length=15, choices=gender)
-    height = models.DecimalField()
-    weight = models.DecimalField()
+    height = models.DecimalField(max_digits=4, decimal_places=2)
+    weight = models.DecimalField(max_digits=4, decimal_places=2)
     ward = models.CharField(max_length=50)
     lga = models.CharField(max_length=50)
     state = models.CharField(max_length=50)

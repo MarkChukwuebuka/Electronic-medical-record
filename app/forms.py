@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from models import *
+from .models import *
 
 
 class UserLoginForm(forms.Form):
@@ -82,9 +82,8 @@ class PatientRegistrationForm(ModelForm):
 
 
 class EncounterCreationForm(ModelForm):
-    # patient_username = forms.CharField(max_length=150)
-    # diagnostics = forms.CharField(max_length=256)
+    patient_username = forms.CharField(max_length=150)
 
     class Meta:
         model = Encounter
-        fields = ['patient_username','date', 'time', 'visit', 'weight', 'height', 'bp', 'temp', 'rr', 'compaints','diagnostics', 'treatment_plan']
+        fields = ['patient_username','date', 'time', 'visit', 'weight', 'height', 'bp', 'temp', 'rr', 'complaints','diagnosis', 'treatment_plan']
