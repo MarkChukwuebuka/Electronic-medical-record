@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Dashboard
+{% endblock title %}
+
+{% block body %}
+
+    {% for patient in patients %}
+
+        <a href="{% url 'view_patient_profile' patient.id  %}">{{patient.surname}} {{patient.name}}</a>
+
+    {% endfor %}
+
+{% endblock body %}

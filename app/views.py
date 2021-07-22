@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate
 from .forms import *
 from django.contrib import auth
@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.base_user import BaseUserManager
 from .decorators import *
 from .models import *
+from django.contrib import messages
 
 
 # Create your views here.
@@ -42,31 +43,33 @@ def login(request):
 def register_worker(request):
     if request.method == "POST":
         user_form = UserRegistrationForm1(request.POST)
-        doctor_form = WorkerRegistrationForm(request.POST)
+        worker_form = WorkerRegistrationForm(request.POST)
 
-        if user_form.is_valid() and doctor_form.is_valid():
+        if user_form.is_valid() and worker_form.is_valid():
             user = user_form.save(commit=False)
             user.user_type = 1
-            user.is_active = False
+            user.is_active = True
             user.save()
-            doctor = doctor_form.save(commit=False)
-            doctor.user = user
-            doctor.save()
+            worker = worker_form.save(commit=False)
+            worker.worker = user
+            worker.name = user.first_name
+            worker.surname = user.last_name 
+            worker.save()
 
             u = user_form.cleaned_data['username']
             p = user_form.cleaned_data['password1']
             user = authenticate(username=u, password=p)
 
             if user is not None:
+                messages.success(request, "Your registration was successful")
                 auth.login(request, user)
                 return redirect("/")
-            else:
-                user_form.add_error(None, "Registration completed, Please contact with site admin for activation.")
+            
     else:
         user_form = UserRegistrationForm1()
-        doctor_form = WorkerRegistrationForm()
+        worker_form = WorkerRegistrationForm()
 
-    context = {'user_form': user_form, 'user_type_form': doctor_form}
+    context = {'user_form': user_form, 'user_type_form': worker_form}
 
     return render(request, "register.html", context)
 
@@ -77,7 +80,7 @@ def register_worker(request):
 def register_patient(request):
     if request.method == "POST":
         user_form = UserRegistrationForm2(request.POST)
-        patient_form = PatientRegistrationForm(request.POST)
+        patient_form = PatientRegistrationForm(request.POST, request.FILES)
 
         if user_form.is_valid() and patient_form.is_valid():
             user = user_form.save(commit=False)
@@ -93,12 +96,25 @@ def register_patient(request):
             user.set_password(pwd)
             user.save()
             patient = patient_form.save(commit=False)
-            patient.user = user
-            patient.creator = MedUser.objects.get(username = request.user)
+            patient.patient = user
+            patient.worker = MedUser.objects.get(username = request.user)
+            patient.name = user.first_name
+            patient.surname = user.last_name
+            patient.age = patient.age
+            patient.gender = patient.gender
+            patient.height = patient.height
+            patient.weight = patient.weight
+            patient.ward = patient.ward
+            patient.lga = patient.lga
+            patient.state = patient.state
+            patient.picture = patient.picture
             patient.save()
 
-            user_form.add_error(None, "Patient registered with username = {} with random password = {}"
+            messages.success(request, "Patient registered with username = {} with random password = {}"
                                 .format(user.username,pwd))
+            
+            return redirect("/")
+
     else:
         user_form = UserRegistrationForm2()
         patient_form = PatientRegistrationForm()
@@ -120,10 +136,20 @@ def logout(request):
 # patient profile page after patient logs in
 @login_required(login_url="/login")
 def profile(request):
-    return render(request, "profile.html")
+    context = {
+        'patient':Patient.objects.get(patient=request.user)
+    }
 
+    return render(request, "profile.html", context)
 
+@worker_login_required
+def view_patient(request, pk):
 
+    context = {
+        'patient': get_object_or_404(Patient, pk=pk)
+    }
+
+    return render(request, 'profile.html', context)
 
 # create encounter for patient
 @worker_login_required
@@ -136,21 +162,21 @@ def create_encounter(request):
             encounter = encounter_form.save(commit=False)
             pat = MedUser.objects.get(username=encounter_form.cleaned_data['patient_username'])
             encounter.patient = pat
-            encounter.date = pat.date
-            encounter.time = pat.time
-            encounter.visit = pat.visit
-            encounter.weight = pat.weight
-            encounter.height = pat.height
-            encounter.bp = pat.bp
-            encounter.temp = pat.bp
-            encounter.rr = pat.rr
-            encounter.complaints = pat.complaints
-            encounter.diagnosis = pat.diagnosis
-            encounter.treatment_plan = pat.treatment_plan
+            encounter.date = encounter.date
+            encounter.time = encounter.time
+            encounter.visit = encounter.visit
+            encounter.weight = encounter.weight
+            encounter.height = encounter.height
+            encounter.bp = encounter.bp
+            encounter.temp = encounter.bp
+            encounter.rr = encounter.rr
+            encounter.complaints = encounter.complaints
+            encounter.diagnosis = encounter.diagnosis
+            encounter.treatment_plan = encounter.treatment_plan
             encounter.worker = MedUser.objects.get(username=request.user)
             encounter.save()
             
-            return redirect("/encounter/{id}".format(id=encounter.id))
+            return redirect("/patient/encounter/{id}".format(id=encounter.id))
     else:
         encounter_form = EncounterCreationForm(request.POST)
 

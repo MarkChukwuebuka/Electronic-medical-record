@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Encounter
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+    
+    <h1>Details of Enconter</h1>
+
+    <p>Name of patient : {{encounter.patient.user.name}} {{encounter.patient.surname}}</p>
+    <p>Name of Doctor : {{encounter.worker.name}} {{encounter.worker.surname}}</p>
+    <p>Date of Encounter : {{encounter.date}}</p>
+    <p>Time of Encounter : {{encounter.time}}</p>
+    <p>Type of visit : {{encounter.visit}}</p>
+    <p>Weight of patient : {{encounter.weight}}</p>
+    <p>Height of patient : {{encounter.height}}</p>
+    <p>BMI : {{encounter.bmi}}</p>
+    <p>Blood Pressure : {{encounter.bp}}</p>
+    <p>Temperature : {{encounter.temp}}</p>
+    <p>Respiratory Rate : {{encounter.rr}}</p>
+    <p>Complaints : {{encounter.complaints}}</p>
+    <p>Diagnosis : {{encounter.diagnosis}}</p>
+    <p>Treatment Plan : {{encounter.treatment_plan}}</p>
+
+
+
+    {% if user.user_type == 1 %}
+        <a href="#">
+        Send  
+        </a>
+    {% endif %}
+</div>
+
+
+{% endblock body %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% block body %}
+
+<div class="container">
+
+    <h1>Welcome, {{ patient.name }}</h1>
+    <img src="{{patient.picture.url}}" height="320px" width="300px">
+    <p>Age : {{patient.age}}</p>
+    <p>Gener : {{patient.gender}}</p>
+    <p>Weight : {{patient.weight}}</p>
+    <p>Height : {{patient.height}}</p>
+    <p>BMI : {{patient.bmi}}</p>
+    <p>Ward : {{patient.ward}}</p>
+    <p>LGA : {{patient.lga}}</p>
+    <p>State : {{patient.state}}</p>
+
+    {% if user.user_type == 1 %}
+        <a href="{% url 'create_encounter' %}">Start Encounter</a>
+    {% endif %}
+
+</div>
+
+{% endblock body %}

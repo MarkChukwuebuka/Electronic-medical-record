@@ -2,7 +2,15 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.forms.widgets import TimeInput
 from .models import *
+from functools import partial
+
+
+
+DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+
+
 
 
 class UserLoginForm(forms.Form):
@@ -74,7 +82,7 @@ class WorkerRegistrationForm(ModelForm):
 
 
 class PatientRegistrationForm(ModelForm):
-    
+    picture = forms.ImageField()
 
     class Meta:
         model = Patient
@@ -83,6 +91,8 @@ class PatientRegistrationForm(ModelForm):
 
 class EncounterCreationForm(ModelForm):
     patient_username = forms.CharField(max_length=150)
+    date = forms.DateField(widget=DateInput())
+    time = forms.TimeField(widget=TimeInput())
 
     class Meta:
         model = Encounter

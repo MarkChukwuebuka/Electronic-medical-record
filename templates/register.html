@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block title %}
+    Register
+{% endblock title %}
+
+{% block body %}
+
+    <style>
+
+        #hint_id_username, #hint_id_password1, #hint_id_password2 {
+            display: none;
+        }
+        
+    </style>
+
+
+
+    <div class="container">
+        <h2 class="heading font-weight-light text-center">Sign Up</h2>
+        <hr>
+    </div>
+
+    <div class="container w-25 card p-4 mt-4">
+        
+        <form class="form-control" method="post" enctype = "multipart/form-data" action="">
+            
+                {% csrf_token %}
+                {{ user_form | crispy }}
+                {{ user_type_form | crispy }}
+
+                <input type="submit" value="Register" class="w-100 text-white text-center my-2 btn btn-info">
+            
+        </form>
+
+        <a href="{% url 'home' %}">Back</a>
+
+    </div>
+
+
+
+{% endblock body %}
