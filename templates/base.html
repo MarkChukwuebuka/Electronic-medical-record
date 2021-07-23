@@ -14,6 +14,9 @@
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 
+    <!-- CSS for tablator CDN package -->
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -60,6 +63,20 @@
 
 
 
+
+
+
+
+    <!-- script for tabulator CDN package -->
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+
+
+
+    
+    {% block scripts %}
+    {% endblock scripts %}
+
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -74,8 +91,15 @@
 
     $(document).ready(function() {
         $('.datepicker').datepicker();
-        $(".timepicker").timepicker();
+        
     });
     </script>
+
+
+
+
+
+
+
 </body>
 </html>

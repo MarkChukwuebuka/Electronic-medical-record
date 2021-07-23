@@ -7,6 +7,8 @@ from django.contrib.auth.base_user import BaseUserManager
 from .decorators import *
 from .models import *
 from django.contrib import messages
+from .serializers import *
+from rest_framework import generics
 
 
 # Create your views here.
@@ -197,6 +199,7 @@ def encounter_detail(request, pk):
 
 
 # worker's dashboard for analysis
+@worker_login_required
 def dashboard(request):
 
     context = {
@@ -204,3 +207,8 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
+class PatientListView(generics.ListAPIView):
+    queryset = Patient.objects.all()
+    # queryset = queryset.order_by('-id')
+    serializer_class = PatientSerializer

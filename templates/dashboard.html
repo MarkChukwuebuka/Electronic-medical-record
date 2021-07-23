@@ -8,10 +8,72 @@
 
 {% block body %}
 
-    {% for patient in patients %}
+    <!-- filter through table -->
+    <div class="col">
+        <select id="filter-field" class="btn mx-1 my-2 btn">
+        <option></option>
 
-        <a href="{% url 'view_patient_profile' patient.id  %}">{{patient.surname}} {{patient.name}}</a>
-
-    {% endfor %}
+          <option value="gender">Gender</option>
+          <option value="age">Age</option>
+          
+        </select>
+      
+        <select id="filter-type" class="btn mx-1 my-2 btn filter">
+          <option value="like">like</option>
+          <option value="=">=</option>
+          <option value="<"><</option>
+          <option value="<="><=</option>
+          <option value=">">></option>
+          <option value=">=">>=</option>
+          <option value="!=">!=</option>
+          
+        </select>
+      
+        <input id="filter-value" type="text" placeholder="Value to filter" class="mx-1 my-2 btn">
+    
+        <input type="submit" id="filter-clear" value="Clear" class="btn mx-1 my-2 btn-primary">
+      </div>
 
 {% endblock body %}
+
+
+{% block scripts %}
+
+
+
+    <script>
+
+
+
+
+
+        //create Tabulator on DOM element with id "example-table"
+        var table  = new Tabulator("#my-table", {
+            ajaxURL:"{% url 'patient_list' %}", // url path to the api
+            layout: "fitColumns",
+            pagination:"local",
+            paginationSize:6,
+            paginationSizeSelector:[3, 6, 8, 10],
+            selectable:true,
+            // groupBy:"first_name",
+            columns: [ //define table columns
+                        {title: "ID", field:"id", frozen:true},
+                        {title: "First Name", field:"name"},
+                        {title: "Surname", field:"surname", editor:true},
+                        {title: "Gender", field:"gender"},
+                        {title: "Age", field:"age"},
+                        {title: "Worker", field: "worker"},
+            ],
+
+
+            
+        });
+
+        
+    </script>
+
+
+
+
+
+{% endblock scripts %}

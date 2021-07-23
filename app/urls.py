@@ -10,7 +10,11 @@ urlpatterns = [
     path('profile/', profile, name = 'profile'),
     path('patient/profile/<int:pk>', view_patient, name = 'view_patient_profile'),
     path('patient/encounter/<int:pk>/', encounter_detail, name='encounter_detail'),
-    path('dashboard', dashboard, name ='dashboard'),
-    path('create-encounter', create_encounter, name = 'create_encounter')
+    path('dashboard/', dashboard, name ='dashboard'),
+    path('create-encounter/', create_encounter, name = 'create_encounter'),
+
+
+    # API endpoint for all patients
+    path('patients_api/', PatientListView.as_view(), name = 'patient_list')
 
 ]

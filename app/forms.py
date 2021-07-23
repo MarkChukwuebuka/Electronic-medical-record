@@ -92,7 +92,6 @@ class PatientRegistrationForm(ModelForm):
 class EncounterCreationForm(ModelForm):
     patient_username = forms.CharField(max_length=150)
     date = forms.DateField(widget=DateInput())
-    time = forms.TimeField(widget=TimeInput())
 
     class Meta:
         model = Encounter
